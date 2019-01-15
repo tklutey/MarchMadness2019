@@ -2,14 +2,14 @@
 import pandas as pd
 import logging
 
-base_dir = '/Users/kluteytk/development/projects/march_madness'
-tourney_results_csv = base_dir + '/data/DataFiles/NCAATourneyCompactResults.csv'
-tourney_seeds_csv = base_dir + '/data/DataFiles/NCAATourneySeeds.csv'
-tourney_rounds_csv = base_dir + '/data/DataFiles/NCAATourneySeedRoundSlots.csv'
-teams_csv = base_dir + '/data/DataFiles/Teams.csv'
+base_dir = '/Users/kluteytk/development/projects/MarchMadness2019/data/'
+tourney_results_csv = base_dir + '/raw/NCAATourneyCompactResults.csv'
+tourney_seeds_csv = base_dir + '/raw/NCAATourneySeeds.csv'
+tourney_rounds_csv = base_dir + '/raw/NCAATourneySeedRoundSlots.csv'
+teams_csv = base_dir + '/raw/Teams.csv'
     
 def load_season_team_data(start, end):
-    bball_ref_dir = base_dir + '/data/bball_reference/'
+    bball_ref_dir = base_dir + '/external/bball_reference/'
     df_regular_season_aggregated = pd.DataFrame()
     for year in range(start, end + 1):
         regular_season_csv = bball_ref_dir + str(year) + '_season.csv'

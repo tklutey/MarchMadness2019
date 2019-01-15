@@ -1,7 +1,4 @@
-import sys
-sys.path.append('/Users/kluteytk/development/projects/march_madness/MarchMadness2019/src/')
-
-import train_model
+from models import train_model
 from features import build_features
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -50,7 +47,12 @@ def print_hit_rate(df_eval):
     print('Hit rate: ' + '{:.1%}'.format(hit_rate))
     print('Points off per game: ' + str(err_per_game))
     
-
+def evaluate_predictions(predictions, test_labels):
+    df_eval = actual_vs_predicted(predictions, test_labels)
+    print(df_eval)
+    plot_predictions(predictions, test_labels)
+    print_hit_rate(df_eval)
+    
 def main():
     (train_dataset, train_labels), (test_dataset, test_labels) = build_features.create_dataset()
     model = train_model.create_train_model()
