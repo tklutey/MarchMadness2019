@@ -32,7 +32,7 @@ def parse_single_season_team_data(dataframe):
     return dataframe
 
 def main():
-    df = make_dataset.load_season_team_data(1993, 2017)
+    df = make_dataset.load_season_team_data(1993, 2018)
     df = parse_single_season_team_data(df)
     return df
 

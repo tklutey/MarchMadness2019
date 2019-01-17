@@ -20,6 +20,7 @@ def mirror_results(df_game_results):
 
 def main():
     df_game_results = make_dataset.load_tournament_game_results();
+    print(df_game_results.shape)
     df_game_results.drop(labels=['WLoc', 'NumOT'], inplace=True, axis=1)
     df_game_results['GameID'] = feature_utils.create_key_from_fields(df_game_results['Season'], df_game_results['WTeamID'], df_game_results['LTeamID'])
     df_game_results['TeamA_ID'] = feature_utils.create_key_from_fields(df_game_results['WTeamID'], df_game_results['Season'])

@@ -5,9 +5,6 @@ Created on Fri Jan 11 23:58:09 2019
 
 @author: kluteytk
 """
-import sys
-sys.path.append('/Users/kluteytk/development/projects/march_madness/MarchMadness2019/src/')
-
 import pandas as pd
 from features.utils import feature_utils 
 from features.team.team_modules import build_season_data  
@@ -35,9 +32,9 @@ def main():
     df_team_metadata = build_team_metadata.main()
     df_regular_season_aggregated = build_season_data.main()
     df_regular_season_aggregated = groom_spellings(df_regular_season_aggregated)
-    a = IntermediateFileWriter('TeamData.csv')
-    a.write_to_csv(df_regular_season_aggregated)
     df = merge_season_team_metadata(df_team_metadata, df_regular_season_aggregated)
+    a = IntermediateFileWriter('TeamData.csv')
+    a.write_to_csv(df)
     
     return df
 

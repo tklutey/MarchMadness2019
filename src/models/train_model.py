@@ -57,8 +57,7 @@ def plot_training(hist):
     plt.legend()
     plt.ylim([0,5])
 
-def create_train_model():
-    (train_dataset, train_labels), (test_dataset, test_labels) = build_features.create_dataset()
+def create_train_model(train_dataset, train_labels):
     model = build_model(train_dataset)
     model, hist = train_model(model, train_dataset, train_labels)
     return model

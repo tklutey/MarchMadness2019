@@ -5,6 +5,7 @@ import pandas as pd
 
 def predict(model, test_dataset):
     test_predictions = model.predict(test_dataset).flatten()
+    
     return test_predictions
 
 def plot_predictions(predictions, test_labels):    
