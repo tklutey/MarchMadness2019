@@ -11,7 +11,6 @@ dependencies:
   - astroid=2.1.0=py36_0
   - babel=2.6.0=py36_0
   - backcall=0.1.0=py36_0
-  - beautifulsoup4=4.6.3=py36_0
   - blas=1.0=openblas
   - bleach=3.0.2=py36_0
   - c-ares=1.15.0=h1de35cc_1
