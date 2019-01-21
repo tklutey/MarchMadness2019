@@ -8,7 +8,8 @@ def predict(model, test_dataset):
     
     return test_predictions
 
-def plot_predictions(predictions, test_labels):    
+def plot_predictions(predictions, test_labels):  
+    plt.figure()
     plt.scatter(test_labels, predictions)
     plt.xlabel('True Values [ScoreDiff]')
     plt.ylabel('Predictions [ScoreDiff]')
@@ -50,7 +51,7 @@ def print_hit_rate(df_eval):
     
 def evaluate_predictions(predictions, test_labels):
     df_eval = actual_vs_predicted(predictions, test_labels)
-    print(df_eval)
+    print(df_eval.head())
     plot_predictions(predictions, test_labels)
     print_hit_rate(df_eval)
     

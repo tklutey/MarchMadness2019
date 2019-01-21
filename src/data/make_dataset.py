@@ -6,7 +6,7 @@ base_dir = '/Users/kluteytk/development/projects/MarchMadness2019/data/'
 tourney_results_csv = base_dir + '/raw/NCAATourneyCompactResults.csv'
 tourney_seeds_csv = base_dir + '/raw/NCAATourneySeeds.csv'
 tourney_rounds_csv = base_dir + '/raw/NCAATourneySeedRoundSlots.csv'
-teams_csv = base_dir + '/raw/Teams.csv'
+spellings_csv = base_dir + '/raw/TeamSpellings.csv'
     
 def load_season_team_data(start, end):
     bball_ref_dir = base_dir + '/external/bball_reference/'
@@ -19,9 +19,6 @@ def load_season_team_data(start, end):
         
     return df_regular_season_aggregated
 
-def load_team_metadata():
-    return pd.read_csv(teams_csv)
-
 def load_tournament_game_results():
     return pd.read_csv(tourney_results_csv)
 
@@ -30,6 +27,9 @@ def load_round_data():
 
 def load_seed_data():
     return pd.read_csv(tourney_seeds_csv)
+
+def load_spellings():
+    return pd.read_csv(spellings_csv, encoding='utf-8')
 
 
 def main():

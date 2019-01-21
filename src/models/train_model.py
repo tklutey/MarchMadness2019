@@ -36,6 +36,16 @@ def train_model(model, df_training_data, df_training_labels):
     hist['epoch'] = history.epoch
     return model, hist
 
+def save_model(model):
+    model_architecture = '/Users/kluteytk/development/projects/MarchMadness2019/models/model_architecture.json'
+    model_weights = '/Users/kluteytk/development/projects/MarchMadness2019/models/model_weights.h5'
+    model_json = model.to_json()
+    with open(model_architecture, "w") as json_file:
+        json_file.write(model_json)
+    # serialize weights to HDF5
+    model.save_weights(model_weights)
+    print("Saved model to disk")
+
 def plot_training(hist):
     plt.figure()
     plt.xlabel('Epoch')
@@ -55,11 +65,18 @@ def plot_training(hist):
     plt.plot(hist['epoch'], hist['val_mean_squared_error'],
            label = 'Val Error')
     plt.legend()
-    plt.ylim([0,5])
+    plt.ylim([0,200])
 
 def create_train_model(train_dataset, train_labels):
     model = build_model(train_dataset)
     model, hist = train_model(model, train_dataset, train_labels)
+    
+    scores = model.evaluate(train_dataset, train_labels, verbose=0)
+    print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
+    
+    plot_training(hist)
+    
+    save_model(model)
     return model
 
 def main():
