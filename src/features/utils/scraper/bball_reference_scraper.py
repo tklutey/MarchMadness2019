@@ -40,8 +40,12 @@ def write_csv_string_to_file(csv_element, filename):
 
 def run_workflow():
     driver, wait = instantiate_driver()
-    csv_text = read_csv_element('https://www.sports-reference.com/cbb/seasons/2018-ratings.html', driver, wait)
-    write_csv_string_to_file(csv_text, '/Users/kluteytk/Downloads/tester.csv')
+    base_url = '/Users/kluteytk/development/projects/MarchMadness2019/data/external/bball_reference/ratings/'
+    year = 2018
+    print(str(year) + '...')
+    csv_text = read_csv_element('https://www.sports-reference.com/cbb/seasons/' + str(year) + '-ratings.html', driver, wait)
+    url = base_url + str(year) + 'SchoolRatings.csv'
+    write_csv_string_to_file(csv_text, url)
     
 run_workflow()
     

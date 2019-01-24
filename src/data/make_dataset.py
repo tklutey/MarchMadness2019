@@ -19,6 +19,17 @@ def load_season_team_data(start, end):
         
     return df_regular_season_aggregated
 
+def load_ratings_team_data(start, end):
+    bball_ref_dir = base_dir + 'external/bball_reference/ratings/'
+    df_regular_season_aggregated_ratings = pd.DataFrame()
+    for year in range(start, end + 1):
+        ratings_csv = bball_ref_dir + str(year) + 'SchoolRatings.csv'
+        df_ratings = pd.read_csv(ratings_csv, header=1)
+        df_ratings['Year'] = year
+        df_regular_season_aggregated_ratings = df_regular_season_aggregated_ratings.append(df_ratings)
+        
+    return df_regular_season_aggregated_ratings
+
 def load_tournament_game_results():
     return pd.read_csv(tourney_results_csv)
 
@@ -42,7 +53,8 @@ def main():
 
 if __name__ == '__main__':
     main()
-    df = load_season_team_data(2000, 2002)
+    df = load_ratings_team_data(2000, 2002)
     print(df.head())
+    print(df.keys())
 
 

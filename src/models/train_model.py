@@ -14,11 +14,13 @@ class PrintDot(keras.callbacks.Callback):
 
 def build_model(df_training_data):
     model = keras.Sequential([
-        layers.Dense(64, activation=tf.nn.relu, input_shape=[len(df_training_data.keys())]),
+        layers.Dense(500, activation=tf.nn.relu, input_shape=[len(df_training_data.keys())]),
+        layers.Dense(250, activation=tf.nn.relu),
+        layers.Dense(50, activation=tf.nn.relu),
         layers.Dense(1)
       ])
     
-    optimizer = tf.train.RMSPropOptimizer(0.001)
+    optimizer = tf.train.AdamOptimizer(0.000001)
 
     model.compile(loss='mse',
             optimizer=optimizer,
@@ -27,7 +29,7 @@ def build_model(df_training_data):
     return model
 
 def train_model(model, df_training_data, df_training_labels):
-    early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=50)
+    early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
 
     history = model.fit(df_training_data, df_training_labels, epochs=EPOCHS,
                     validation_split = 0.2, verbose=0, callbacks=[early_stop, PrintDot()])
@@ -68,6 +70,8 @@ def plot_training(hist):
     plt.ylim([0,200])
 
 def create_train_model(train_dataset, train_labels):
+    print(train_dataset.head())
+    print(train_labels.head())
     model = build_model(train_dataset)
     model, hist = train_model(model, train_dataset, train_labels)
     
