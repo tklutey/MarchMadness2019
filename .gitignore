@@ -1,3 +1,8 @@
+# Generated data / models
+data/interim/
+data/processed/
+models/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
