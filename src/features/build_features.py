@@ -5,10 +5,9 @@ sys.path.append('/Users/kluteytk/development/projects/MarchMadness2019/src/')
 
 from features.team import build_team_data
 from features.game import build_game_data
-from features.normalize import normalize_features
-from util.IntermediateFileWriter import IntermediateFileWriter
+from util.IntermediateFilePersistence import IntermediateFilePersistence
 
-def merge_game_with_team_data(df_game_results, df_regular_season_data):
+def __merge_game_with_team_data(df_game_results, df_regular_season_data):
     
     df_team_a = pd.merge(left=df_game_results, right=df_regular_season_data, how='inner', left_on=['TeamA_ID'], right_on=['TeamSeasonId'])
     df_team_a.drop(labels=['TeamSeasonId', 'Year'], inplace=True, axis=1)
@@ -21,29 +20,15 @@ def merge_game_with_team_data(df_game_results, df_regular_season_data):
     
     return df_dataset
 
-def groom_normalize(df):
-    df = normalize_features.groom(df)
-    df = normalize_features.normalize(df)
+def make():
+    df = __merge_game_with_team_data(build_game_data.main(), build_team_data.main())
     return df
-
-def split_training_data(df_dataset):
-    train_dataset = df_dataset.sample(frac=0.8,random_state=0)
-    test_dataset = df_dataset.drop(train_dataset.index)
     
-    train_labels = train_dataset.pop('ScoreDiff')
-    test_labels = test_dataset.pop('ScoreDiff')
-    
-    return (train_dataset, train_labels), (test_dataset, test_labels)
-
-def create_dataset():
-    df = merge_game_with_team_data(build_game_data.main(), build_team_data.main())
-    fr = IntermediateFileWriter('CanonicalFeatureData.csv')
+def persist(df):
+    fr = IntermediateFilePersistence('CanonicalFeatureData.csv')
     fr.write_to_csv(df)
-    df = groom_normalize(df)
-    return split_training_data(df)
-
-        
-
+    
 if __name__ == '__main__':
-#    print(create_dataset())
-    create_dataset()
+    df = make()
+    print(df.head())
+    persist(df)

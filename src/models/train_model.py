@@ -3,7 +3,8 @@ from tensorflow import keras
 from tensorflow.keras import layers
 import matplotlib.pyplot as plt
 import pandas as pd
-from features import build_features
+from util import split_dataset
+from util.IntermediateFilePersistence import IntermediateFilePersistence
 
 EPOCHS = 1000
 
@@ -36,17 +37,11 @@ def train_model(model, df_training_data, df_training_labels):
     
     hist = pd.DataFrame(history.history)
     hist['epoch'] = history.epoch
+    
+    scores = model.evaluate(df_training_data, df_training_labels, verbose=0)
+    print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
+    
     return model, hist
-
-def save_model(model):
-    model_architecture = '/Users/kluteytk/development/projects/MarchMadness2019/models/model_architecture.json'
-    model_weights = '/Users/kluteytk/development/projects/MarchMadness2019/models/model_weights.h5'
-    model_json = model.to_json()
-    with open(model_architecture, "w") as json_file:
-        json_file.write(model_json)
-    # serialize weights to HDF5
-    model.save_weights(model_weights)
-    print("Saved model to disk")
 
 def plot_training(hist):
     plt.figure()
@@ -68,30 +63,31 @@ def plot_training(hist):
            label = 'Val Error')
     plt.legend()
     plt.ylim([0,200])
+    
+def make():
+    fp = IntermediateFilePersistence('NormalizedFeatureData.csv')
+    df = fp.read_from_csv()
 
-def create_train_model(train_dataset, train_labels):
-    print(train_dataset.head())
-    print(train_labels.head())
+    (train_dataset, train_labels), (test_dataset, test_labels) = split_dataset.split_training_data(df)
+
     model = build_model(train_dataset)
     model, hist = train_model(model, train_dataset, train_labels)
     
-    scores = model.evaluate(train_dataset, train_labels, verbose=0)
-    print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
-    
     plot_training(hist)
     
-    save_model(model)
     return model
-
-def main():
-    (train_dataset, train_labels), (test_dataset, test_labels) = build_features.create_dataset()
-    model = build_model(train_dataset)
-    model, hist = train_model(model, train_dataset, train_labels)
-    print(hist.tail())
-    plot_training(hist)
     
-if __name__ == '__main__':
-#    print(sys.path)
-
-    main()
+def persist(model):
+    model_architecture = '/Users/kluteytk/development/projects/MarchMadness2019/models/model_architecture.json'
+    model_weights = '/Users/kluteytk/development/projects/MarchMadness2019/models/model_weights.h5'
+    model_json = model.to_json()
+    with open(model_architecture, "w") as json_file:
+        json_file.write(model_json)
+    # serialize weights to HDF5
+    model.save_weights(model_weights)
+    print("Saved model to disk")
     
+    
+if __name__ == '__main__':    
+    model = make()
+    persist(model)

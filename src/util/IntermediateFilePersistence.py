@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from util.BaseFileWriter import BaseFileWriter
+from util.BaseFilePersistence import BaseFilePersistence
 
-class IntermediateFileWriter(BaseFileWriter):
+class IntermediateFilePersistence(BaseFilePersistence):
         
     def __init__(self, filename):
         filepath = '/Users/kluteytk/development/projects/MarchMadness2019/data/interim/' + filename
-        BaseFileWriter.__init__(self, filepath);
+        BaseFilePersistence.__init__(self, filepath);
         
     

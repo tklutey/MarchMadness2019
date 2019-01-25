@@ -15,7 +15,7 @@ from features.team.team_modules import parse_team_names
 from data import make_dataset
 
 
-from util.IntermediateFileWriter import IntermediateFileWriter
+from util.IntermediateFilePersistence import IntermediateFilePersistence
 
 def merge_season_team_metadata(df_team_sp, df_regular_season_aggregated):
     df_team_sp['TeamNameSpelling'] = df_team_sp['TeamNameSpelling'].str.lower()
@@ -58,7 +58,7 @@ def main():
     
     df = merge_reference_data(df_season, df_ratings)
     
-    a = IntermediateFileWriter('TeamData.csv')
+    a = IntermediateFilePersistence('TeamData.csv')
     a.write_to_csv(df)
     
     return df

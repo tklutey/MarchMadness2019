@@ -1,24 +1,27 @@
-from models import train_model
-from features import build_features
 import matplotlib.pyplot as plt
 import pandas as pd
+from tensorflow.keras.models import model_from_json
+from util import split_dataset
+from util.IntermediateFilePersistence import IntermediateFilePersistence
 
-def predict(model, test_dataset):
-    test_predictions = model.predict(test_dataset).flatten()
+def __read_from_csv_and_split():
+    fp = IntermediateFilePersistence('NormalizedFeatureData.csv')
+    df = fp.read_from_csv()
+
+    return split_dataset.split_training_data(df)
     
-    return test_predictions
+def __load_model():
+    # load json and create model
+    json_file = open('/Users/kluteytk/development/projects/MarchMadness2019/models/model_architecture.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model = model_from_json(loaded_model_json)
+    # load weights into new model
+    loaded_model.load_weights('/Users/kluteytk/development/projects/MarchMadness2019/models/model_weights.h5')
+    print("Loaded model from disk")
+    return loaded_model
 
-def plot_predictions(predictions, test_labels):  
-    plt.figure()
-    plt.scatter(test_labels, predictions)
-    plt.xlabel('True Values [ScoreDiff]')
-    plt.ylabel('Predictions [ScoreDiff]')
-    plt.axis('equal')
-    plt.axis('square')
-    _ = plt.plot([-50, 50], [-50, 50])
-
-    
-def actual_vs_predicted(predictions, test_labels):
+def __actual_vs_predicted(predictions, test_labels):
     test_labels = test_labels.reset_index(drop=True)
 
     df_eval = pd.DataFrame()
@@ -27,17 +30,17 @@ def actual_vs_predicted(predictions, test_labels):
     
     return df_eval
     
-def sign(x):
+def __sign(x):
     return 1 - (x<=0)
     
-def print_hit_rate(df_eval):
+def __print_hit_rate(df_eval):
     correct = 0
     incorrect = 0
     points_off = 0
 
     for i,r in df_eval.iterrows():
         points_off = abs(r['Predicted'] - r['Actual']) + points_off
-        if sign(r['Predicted']) == sign(r['Actual']):
+        if __sign(r['Predicted']) == __sign(r['Actual']):
             correct = correct + 1
         else:
             incorrect = incorrect + 1
@@ -49,25 +52,31 @@ def print_hit_rate(df_eval):
     print('Hit rate: ' + '{:.1%}'.format(hit_rate))
     print('Points off per game: ' + str(err_per_game))
     
+def __plot_predictions(predictions, test_labels):  
+    plt.figure()
+    plt.scatter(test_labels, predictions)
+    plt.xlabel('True Values [ScoreDiff]')
+    plt.ylabel('Predictions [ScoreDiff]')
+    plt.axis('equal')
+    plt.axis('square')
+    _ = plt.plot([-50, 50], [-50, 50])
+    
+def predict():
+    
+    model = __load_model()
+    (train_dataset, train_labels), (test_dataset, test_labels) = __read_from_csv_and_split()
+    
+    test_predictions = model.predict(test_dataset).flatten()
+    
+    return test_predictions
+    
 def evaluate_predictions(predictions, test_labels):
-    df_eval = actual_vs_predicted(predictions, test_labels)
+    df_eval = __actual_vs_predicted(predictions, test_labels)
     print(df_eval.head())
-    plot_predictions(predictions, test_labels)
-    print_hit_rate(df_eval)
-    
-def main():
-    (train_dataset, train_labels), (test_dataset, test_labels) = build_features.create_dataset()
-    model = train_model.create_train_model()
-    predictions = predict(model, test_dataset)
-    df_eval = actual_vs_predicted(predictions, test_labels)
-    print(df_eval)
-    plot_predictions(predictions, test_labels)
-    print_hit_rate(df_eval)
-    
-
-
+    __plot_predictions(predictions, test_labels)
+    __print_hit_rate(df_eval)
     
 if __name__ == '__main__':
-#    print(sys.path)
-    
-    main()
+    (train_dataset, train_labels), (test_dataset, test_labels) = __read_from_csv_and_split()
+    predictions = predict()
+    evaluate_predictions(predictions, test_labels)    
