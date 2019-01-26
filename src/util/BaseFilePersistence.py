@@ -6,7 +6,7 @@ class BaseFilePersistence:
         self.filepath = filepath;
         
     def read_from_csv(self):
-        return pd.read_csv(self.filepath)
+        return pd.read_csv(self.filepath, index_col=False)
     
     def write_to_csv(self, df):
-        df.to_csv(self.filepath)
+        df.to_csv(self.filepath, index=False)
