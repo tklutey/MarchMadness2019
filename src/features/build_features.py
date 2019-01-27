@@ -2,6 +2,7 @@ import pandas as pd
 from features.team import build_team_data
 from features.game import build_game_data
 from util.IntermediateFilePersistence import IntermediateFilePersistence
+from features.utils import feature_utils
 
 def __merge_game_with_team_data(df_game_results, df_regular_season_data):
     
@@ -15,11 +16,13 @@ def __merge_game_with_team_data(df_game_results, df_regular_season_data):
 
     return df_dataset
 
+
 def make():
     build_team_data.make()
     team_fp = IntermediateFilePersistence('TeamData.csv')
     df_team = team_fp.read_from_csv()
     df = __merge_game_with_team_data(build_game_data.main(), df_team)
+    df['Round'] = df.apply(feature_utils.__get_round, axis=1)
     return df
     
 def persist(df):

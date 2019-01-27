@@ -6,7 +6,7 @@ import pandas as pd
 from util import split_dataset
 from util.IntermediateFilePersistence import IntermediateFilePersistence
 
-EPOCHS = 1000
+EPOCHS = 10000
 
 class PrintDot(keras.callbacks.Callback):
   def on_epoch_end(self, epoch, logs):
@@ -21,7 +21,7 @@ def build_model(df_training_data):
         layers.Dense(1)
       ])
     
-    optimizer = tf.train.AdamOptimizer(0.000001)
+    optimizer = tf.train.AdamOptimizer(0.00001)
 
     model.compile(loss='mse',
             optimizer=optimizer,
