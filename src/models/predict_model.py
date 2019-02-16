@@ -1,8 +1,10 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import math
 from tensorflow.keras.models import model_from_json
 from util import split_dataset
 from util.IntermediateFilePersistence import IntermediateFilePersistence
+from util import standardize_values
 
 def __read_from_csv_and_split():
     fp = IntermediateFilePersistence('NormalizedFeatureData.csv')
@@ -29,28 +31,43 @@ def __actual_vs_predicted(predictions, test_labels):
     df_eval['Actual'] = test_labels
     
     return df_eval
+
+def __log_loss(df_eval):
+    y_actual = df_eval['Outcome']
+    y_hat = df_eval['Predicted']
+
+    ## Reference: https://www.kaggle.com/c/mens-machine-learning-competition-2019#evaluation
+    z = y_actual * y_hat.apply(math.log) + (1 - y_actual) * (1 - y_hat).apply(math.log)
+    
+    return -1 * z.sum() / z.size
     
 def __sign(x):
     return 1 - (x<=0)
+
+def __add_win_loss(df):
+    if df.Actual > .5:
+        outcome = 1
+    elif df.Actual < .5:
+        outcome = 0
+
+    return outcome
     
 def __print_hit_rate(df_eval):
     correct = 0
     incorrect = 0
-    points_off = 0
 
     for i,r in df_eval.iterrows():
-        points_off = abs(r['Predicted'] - r['Actual']) + points_off
-        if __sign(r['Predicted']) == __sign(r['Actual']):
+        if r['Predicted'] > .5 and r['Actual'] > .5:
+            correct = correct + 1
+        elif r['Predicted'] < .5 and r['Actual'] < .5:
             correct = correct + 1
         else:
             incorrect = incorrect + 1
         
     total_games = correct+incorrect
     hit_rate = correct / total_games
-    err_per_game = points_off / total_games
     print('Total Games: ' + str(total_games))
     print('Hit rate: ' + '{:.1%}'.format(hit_rate))
-    print('Points off per game: ' + str(err_per_game))
     
 def __plot_predictions(predictions, test_labels):  
     plt.figure()
@@ -67,13 +84,15 @@ def predict():
     (train_dataset, train_labels), (test_dataset, test_labels) = __read_from_csv_and_split()
     
     test_predictions = model.predict(test_dataset).flatten()
-    
+    test_predictions = standardize_values.standardize_values(test_predictions, .99, .01)
+
     return test_predictions
     
 def evaluate_predictions(predictions, test_labels):
     df_eval = __actual_vs_predicted(predictions, test_labels)
-    print(df_eval.head())
+    df_eval['Outcome'] = df_eval.apply(__add_win_loss, axis=1)
     __plot_predictions(predictions, test_labels)
+    print(__log_loss(df_eval))   
     __print_hit_rate(df_eval)
     
 if __name__ == '__main__':

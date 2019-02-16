@@ -25,7 +25,7 @@ def __is_adjacent(region_a, region_b):
             return True
     return False
 
-def __get_round(row):
+def get_round(row):
     
     seed_a = row.Seed_x
     seed_b = row.Seed_y

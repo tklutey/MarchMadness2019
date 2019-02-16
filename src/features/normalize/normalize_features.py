@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 from util.IntermediateFilePersistence import IntermediateFilePersistence
+from util import standardize_values
 
 def __parse_seed(df_seeds, orig_label, dest_label):
     df_seeds[orig_label] = df_seeds[orig_label].str[1:3]
@@ -16,10 +17,16 @@ def __groom(df_dataset):
 
     return df_dataset
 
+def __normalize_score(df, train_stats):
+    min_score = df['ScoreDiff'].min()
+    max_score = df['ScoreDiff'].max()
+    z = (df['ScoreDiff'] - min_score) / (max_score - min_score)
+
+    return z
+    
 def __norm(x, train_stats):
-    df_label = x.pop('ScoreDiff')
     x = (x - train_stats['mean']) / train_stats['std']
-    x['ScoreDiff'] = df_label
+    x['ScoreDiff'] = standardize_values.standardize_values(x['ScoreDiff'], .99, .01)
     return x
 
 def __standardize(df_dataset):

@@ -22,7 +22,7 @@ def make():
     team_fp = IntermediateFilePersistence('TeamData.csv')
     df_team = team_fp.read_from_csv()
     df = __merge_game_with_team_data(build_game_data.main(), df_team)
-    df['Round'] = df.apply(feature_utils.__get_round, axis=1)
+    df['Round'] = df.apply(feature_utils.get_round, axis=1)
     return df
     
 def persist(df):
