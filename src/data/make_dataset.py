@@ -40,7 +40,7 @@ def load_seed_data():
     return pd.read_csv(tourney_seeds_csv)
 
 def load_spellings():
-    return pd.read_csv(spellings_csv, encoding='utf-8')
+    return pd.read_csv(spellings_csv, encoding='iso8859_16')
 
 
 def main():

@@ -18,7 +18,7 @@ def __merge_game_with_team_data(df_game_results, df_regular_season_data):
 
 
 def make():
-    build_team_data.make()
+    build_team_data.persist(build_team_data.make())
     team_fp = IntermediateFilePersistence('TeamData.csv')
     df_team = team_fp.read_from_csv()
     df = __merge_game_with_team_data(build_game_data.main(), df_team)
