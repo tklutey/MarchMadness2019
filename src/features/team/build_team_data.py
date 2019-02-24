@@ -7,10 +7,7 @@ Created on Fri Jan 11 23:58:09 2019
 """
 import pandas as pd
 from features.utils import feature_utils 
-from features.team.team_modules import build_season_data  
-from features.team.team_modules import build_season_ratings
-from features.team.team_modules import parse_team_names 
-from features.team.team_modules import build_seed_data 
+from util import parse_team_names
 from data import make_dataset
 
 
@@ -49,8 +46,8 @@ def __find_mismatched_schools(df_team_sp, df_regular_season_aggregated):
 
 def make():
     df_team_sp = make_dataset.load_spellings()
-    df_regular_season_aggregated = build_season_data.main()
-    df_ratings_aggregated = build_season_ratings.main()
+    df_regular_season_aggregated = make_dataset.load_ratings_team_data();
+    df_ratings_aggregated = make_dataset.load_ratings_team_data();
     
     df_regular_season_aggregated = parse_team_names.groom_spellings(df_regular_season_aggregated)
     df_ratings_aggregated = parse_team_names.groom_spellings(df_ratings_aggregated)
@@ -60,7 +57,7 @@ def make():
     
     df = __merge_reference_data(df_season, df_ratings)
     
-    df = __merge_seed_team_data(df, build_seed_data.make())
+    df = __merge_seed_team_data(df, make_dataset.load_seed_data())
     return df
     
 def persist(df):

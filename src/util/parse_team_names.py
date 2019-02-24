@@ -10,7 +10,3 @@ def groom_spellings(df):
                     series.replace(i, x, inplace=True)
 
     return df
-
-def parse_names(df):
-    df = groom_spellings(df)
-    return df
