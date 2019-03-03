@@ -9,9 +9,10 @@ tourney_results_csv = base_dir + '/raw/NCAATourneyCompactResults.csv'
 tourney_seeds_csv = base_dir + '/raw/NCAATourneySeeds.csv'
 tourney_rounds_csv = base_dir + '/raw/NCAATourneySeedRoundSlots.csv'
 spellings_csv = base_dir + '/raw/TeamSpellings.csv'
+test_year_data = base_dir + '/raw/generated/2019TeamList.csv'
 
 START_YEAR = 1993
-END_YEAR = 2018
+END_YEAR = 2019
 
 
 def load_season_team_data(start=START_YEAR, end=END_YEAR):
@@ -50,7 +51,7 @@ def load_tournament_game_results():
 
 def load_seed_data():
     df = pd.read_csv(tourney_seeds_csv)
-    df['TeamSeasonId'] = feature_utils.create_key_from_fields(df['TeamID'], df['Season'])
+    df['TeamSeasonId'] = feature_utils.create_key_from_season_team(df['Season'], df['TeamID'])
     df = df.drop('TeamID', axis=1)
     fr = IntermediateFilePersistence('transformed/SeedData.csv')
     fr.write_to_csv(df)
@@ -58,6 +59,9 @@ def load_seed_data():
 
 def load_spellings():
     return pd.read_csv(spellings_csv, encoding='iso8859_16')
+
+def load_test_data():
+    return pd.read_csv(test_year_data)
 
 if __name__ == '__main__':
     df = load_seed_data()

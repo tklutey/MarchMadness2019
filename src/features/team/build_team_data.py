@@ -7,7 +7,6 @@ Created on Fri Jan 11 23:58:09 2019
 """
 import pandas as pd
 from features.utils import feature_utils 
-from util import parse_team_names
 from data import make_dataset
 
 
@@ -23,7 +22,7 @@ def __merge_season_team_metadata(df_team_sp, df_regular_season_aggregated):
     df_regular_season_data['TeamName'] = df_regular_season_data['School'].str.upper()
     df_regular_season_data = df_regular_season_data.drop('School', axis=1)
     
-    df_regular_season_data['TeamSeasonId'] = feature_utils.create_key_from_fields(df_regular_season_data['TeamID'], df_regular_season_data['Year'])
+    df_regular_season_data['TeamSeasonId'] = feature_utils.create_key_from_season_team(df_regular_season_data['Year'], df_regular_season_data['TeamID'])
     return df_regular_season_data
 
 def __merge_reference_data(df_a, df_b):
@@ -46,11 +45,8 @@ def __find_mismatched_schools(df_team_sp, df_regular_season_aggregated):
 
 def make():
     df_team_sp = make_dataset.load_spellings()
-    df_regular_season_aggregated = make_dataset.load_ratings_team_data();
+    df_regular_season_aggregated = make_dataset.load_season_team_data();
     df_ratings_aggregated = make_dataset.load_ratings_team_data();
-    
-    df_regular_season_aggregated = parse_team_names.groom_spellings(df_regular_season_aggregated)
-    df_ratings_aggregated = parse_team_names.groom_spellings(df_ratings_aggregated)
 
     df_season = __merge_season_team_metadata(df_team_sp, df_regular_season_aggregated)
     df_ratings = __merge_season_team_metadata(df_team_sp, df_ratings_aggregated)
@@ -58,6 +54,7 @@ def make():
     df = __merge_reference_data(df_season, df_ratings)
     
     df = __merge_seed_team_data(df, make_dataset.load_seed_data())
+    df.drop(labels=['TeamID', 'Year'], inplace=True, axis=1)
     return df
     
 def persist(df):
@@ -67,4 +64,5 @@ def persist(df):
 if __name__ == '__main__':
     df = make()
     print(df.head())
+    print(df.keys())
     persist(df)

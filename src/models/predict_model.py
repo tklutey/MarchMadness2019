@@ -8,7 +8,7 @@ def __read_from_csv_and_split():
     fp = IntermediateFilePersistence('NormalizedFeatureData.csv')
     df = fp.read_from_csv()
 
-    return split_dataset.split_training_data(df)
+    return split_dataset.split_training_data_randomly_with_seed(df)
     
 def __load_model():
     # load json and create model
@@ -51,7 +51,8 @@ def __print_hit_rate(df_eval):
     print('Total Games: ' + str(total_games))
     print('Hit rate: ' + '{:.1%}'.format(hit_rate))
     print('Points off per game: ' + str(err_per_game))
-    
+
+
 def __plot_predictions(predictions, test_labels):  
     plt.figure()
     plt.scatter(test_labels, predictions)
@@ -60,22 +61,27 @@ def __plot_predictions(predictions, test_labels):
     plt.axis('equal')
     plt.axis('square')
     _ = plt.plot([-50, 50], [-50, 50])
-    
-def predict():
+
+
+def predict(test_dataset=None):
     
     model = __load_model()
-    (train_dataset, train_labels), (test_dataset, test_labels) = __read_from_csv_and_split()
+
+    if test_dataset is None:
+        (_, _), (test_dataset, _) = __read_from_csv_and_split()
     
     test_predictions = model.predict(test_dataset).flatten()
     
     return test_predictions
-    
+
+
 def evaluate_predictions(predictions, test_labels):
     df_eval = __actual_vs_predicted(predictions, test_labels)
     print(df_eval.head())
     __plot_predictions(predictions, test_labels)
     __print_hit_rate(df_eval)
-    
+
+
 if __name__ == '__main__':
     (train_dataset, train_labels), (test_dataset, test_labels) = __read_from_csv_and_split()
     predictions = predict()

@@ -64,11 +64,11 @@ def plot_training(hist):
     plt.legend()
     plt.ylim([0,200])
     
-def make():
-    fp = IntermediateFilePersistence('NormalizedFeatureData.csv')
-    df = fp.read_from_csv()
-
-    (train_dataset, train_labels), (test_dataset, test_labels) = split_dataset.split_training_data(df)
+def make(train_dataset=None, train_labels=None):
+    if train_dataset is None:
+        fp = IntermediateFilePersistence('NormalizedFeatureData.csv')
+        df = fp.read_from_csv()
+        (train_dataset, train_labels), (_, _) = split_dataset.split_training_data_randomly_with_seed(df)
 
     model = build_model(train_dataset)
     model, hist = train_model(model, train_dataset, train_labels)

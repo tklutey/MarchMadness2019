@@ -11,6 +11,12 @@ def create_key_from_fields(*a):
             key = key + '_' + i.astype(str)
     return key
 
+def create_game_key(season=0, w_team_id=1, l_team_id=1):
+    return season.astype(str) + '_' + w_team_id.astype(str) + '_' + l_team_id.astype(str)
+
+def create_key_from_season_team(season=0, team_id=1):
+    return season.astype(str) + '_' + team_id.astype(str)
+
 def __range_standardize(value, range):
     dist_min = value
     dist_max = range - value
@@ -26,7 +32,7 @@ def __is_adjacent(region_a, region_b):
     return False
 
 def __get_round(row):
-    
+
     seed_a = row.Seed_x
     seed_b = row.Seed_y
     
