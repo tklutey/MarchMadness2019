@@ -14,7 +14,7 @@ dependencies:
   - blas=1.0=openblas
   - bleach=3.0.2=py36_0
   - c-ares=1.15.0=h1de35cc_1
-  - ca-certificates=2018.03.07=0
+  - ca-certificates=2019.1.23=0
   - certifi=2018.11.29=py36_0
   - cffi=1.11.5=py36h6174b99_1
   - chardet=3.0.4=py36_1
@@ -129,8 +129,8 @@ dependencies:
   - sphinx=1.8.2=py36_0
   - sphinxcontrib=1.0=py36_1
   - sphinxcontrib-websupport=1.1.0=py36_1
-  - spyder=3.3.2=py36_0
-  - spyder-kernels=0.3.0=py36_0
+  - spyder=3.3.3=py36_0
+  - spyder-kernels=0.4.2=py36_0
   - sqlite=3.26.0=ha441bb4_0
   - statsmodels=0.9.0=py36h1d22016_0
   - tensorboard=1.12.1=py36hdc36e2c_0
@@ -157,10 +157,13 @@ dependencies:
   - pip:
     - arrow==0.13.0
     - binaryornot==0.4.4
+    - binarytree==4.0.0
+    - bracketeer==0.2.0
     - click==7.0
     - cookiecutter==1.6.0
     - future==0.17.1
     - jinja2-time==0.2.0
+    - pillow==5.4.1
     - poyo==0.4.2
     - whichcraft==0.5.2
 prefix: /anaconda3/envs/march_madness
