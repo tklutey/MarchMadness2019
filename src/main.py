@@ -14,6 +14,7 @@ from util import split_dataset
 from features.normalize import normalize_features
 from models import predict_model
 from models import train_model
+from util.ProcessedFilePersistence import ProcessedFilePersistence
 
 from util.conference_utils import add_dummies
 
@@ -55,8 +56,10 @@ def full_workflow(historical=True):
 
         # Create predictions                  
         predictions = predict_model.predict(normalized_test_dataset)
-        print(build_test_output(test_dataset, predictions))
+        df_predictions = build_test_output(test_dataset, predictions)
+        fr = ProcessedFilePersistence('2019Predictions.csv')
+        fr.write_to_csv(df_predictions)
 
 if __name__ == '__main__':    
     # full_workflow(historical=False)
-    full_workflow(True)
+    full_workflow(False)
