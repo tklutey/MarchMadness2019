@@ -30,7 +30,6 @@ def full_workflow(historical=True):
     normalize_features.persist(df_normalized)
 
     if historical is True:
-
         (train_dataset, train_labels), (test_dataset, test_labels) = split_dataset.split_training_data_randomly_with_seed(df_normalized)
 
         # Train model
@@ -41,7 +40,6 @@ def full_workflow(historical=True):
         predictions = predict_model.predict()
         # Evaluate predictions
         predict_model.evaluate_predictions(predictions, test_labels)
-        print(build_historical_output(df_canonical, predictions))
 
     else:
         train_dataset, train_labels = split_dataset.pop_label(df_normalized)
@@ -64,4 +62,4 @@ def full_workflow(historical=True):
 
 if __name__ == '__main__':    
     # full_workflow(historical=False)
-    full_workflow(False)
+    full_workflow(True)

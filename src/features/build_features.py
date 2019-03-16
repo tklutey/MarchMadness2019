@@ -37,4 +37,5 @@ def persist(df):
     
 if __name__ == '__main__':
     df = make()
+    print(df.keys())
     persist(df)

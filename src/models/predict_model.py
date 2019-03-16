@@ -8,7 +8,7 @@ def __read_from_csv_and_split():
     fp = IntermediateFilePersistence('NormalizedFeatureData.csv')
     df = fp.read_from_csv()
 
-    return split_dataset.split_training_data_randomly_with_seed(df)
+    return split_dataset.split_training_data_randomly_with_seed(df, 0)
     
 def __load_model():
     # load json and create model

@@ -9,7 +9,7 @@ import csv
 def instantiate_driver():
     print("Instantiating driver...")
     options = Options()
-    options.add_argument('-headless')
+    # options.add_argument('-headless')
     driver = webdriver.Chrome(options=options)
     wait = WebDriverWait(driver, 5)
     return driver, wait
@@ -18,12 +18,12 @@ def instantiate_driver():
 def read_csv_element(url, driver, wait):
     print("Reading CSV element...")
 
-    csv_element_xpath = "//*[@id=\"all_ratings\"]/div[1]/div/ul/li[1]/div/ul/li[4]/button"
-    dropdown_xpath = "//*[@id=\"all_ratings\"]/div[1]/div/ul/li[1]"
-    csv_text = "//*[@id=\"csv_ratings\"]"
-    
+    csv_element_xpath = "//*[@id=\"all_adv_school_stats\"]/div[1]/div/ul/li[2]/div/ul/li[4]/button"
+    dropdown_xpath = "//*[@id=\"all_adv_school_stats\"]/div[1]/div/ul/li[2]/span"
+    csv_text = "//*[@id=\"csv_adv_school_stats\"]"
+
     driver.get(url)
-    
+
     wait.until(EC.presence_of_element_located((By.XPATH, dropdown_xpath))).click()
     wait.until(EC.visibility_of_element_located((By.XPATH, csv_element_xpath))).click()
     csv_element = driver.find_element_by_xpath(csv_text).text
@@ -40,12 +40,14 @@ def write_csv_string_to_file(csv_element, filename):
 
 def run_workflow():
     driver, wait = instantiate_driver()
-    base_url = '/Users/kluteytk/development/projects/MarchMadness2019/data/external/bball_reference/ratings/'
-    year = 2018
-    print(str(year) + '...')
-    csv_text = read_csv_element('https://www.sports-reference.com/cbb/seasons/' + str(year) + '-ratings.html', driver, wait)
-    url = base_url + str(year) + 'SchoolRatings.csv'
-    write_csv_string_to_file(csv_text, url)
-    
-run_workflow()
-    
+    base_url = '/Users/kluteytk/development/projects/MarchMadness2019/data/external/bball_reference/advanced/'
+    for year in range(1993, 2020):
+        print(str(year) + '...')
+        url = 'https://www.sports-reference.com/cbb/seasons/' + str(year) + '-advanced-school-stats.html'
+        print(url)
+        csv_text = read_csv_element(url, driver, wait)
+        url = base_url + str(year) + 'SchoolAdvanced.csv'
+        write_csv_string_to_file(csv_text, url)
+
+if __name__ == '__main__':
+    run_workflow()

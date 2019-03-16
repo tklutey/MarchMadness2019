@@ -30,7 +30,7 @@ def build_model(df_training_data):
     return model
 
 def train_model(model, df_training_data, df_training_labels):
-    early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
+    early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=50)
 
     history = model.fit(df_training_data, df_training_labels, epochs=EPOCHS,
                     validation_split = 0.2, verbose=0, callbacks=[early_stop, PrintDot()])

@@ -26,7 +26,7 @@ def __merge_season_team_metadata(df_team_sp, df_regular_season_aggregated):
     return df_regular_season_data
 
 def __merge_reference_data(df_a, df_b):
-    df_a = df_a.drop(['TeamID', 'SOS', 'SRS', 'Year', 'TeamName'], axis=1)
+    df_a = df_a.drop(['TeamID', 'Year', 'TeamName'], axis=1)
 
     df = pd.merge(left=df_a, right=df_b, how='inner', on='TeamSeasonId')
     return df
@@ -47,11 +47,14 @@ def make():
     df_team_sp = make_dataset.load_spellings()
     df_regular_season_aggregated = make_dataset.load_season_team_data();
     df_ratings_aggregated = make_dataset.load_ratings_team_data();
+    df_advanced_aggregated = make_dataset.load_advanced_team_data();
 
     df_season = __merge_season_team_metadata(df_team_sp, df_regular_season_aggregated)
     df_ratings = __merge_season_team_metadata(df_team_sp, df_ratings_aggregated)
+    df_advanced_aggregated = __merge_season_team_metadata(df_team_sp, df_advanced_aggregated)
     
     df = __merge_reference_data(df_season, df_ratings)
+    df = __merge_reference_data(df_advanced_aggregated, df)
     
     df = __merge_seed_team_data(df, make_dataset.load_seed_data())
     df.drop(labels=['TeamID', 'Year'], inplace=True, axis=1)

@@ -45,6 +45,20 @@ def load_ratings_team_data(start=START_YEAR, end=END_YEAR):
     fr.write_to_csv(df)
     return df
 
+def load_advanced_team_data(start=START_YEAR, end=END_YEAR):
+    bball_ref_dir = base_dir + 'external/bball_reference/advanced/'
+    df_regular_season_aggregated_advanced = pd.DataFrame()
+    for year in range(start, end + 1):
+        advanced_csv = bball_ref_dir + str(year) + 'SchoolAdvanced.csv'
+        df_advanced = pd.read_csv(advanced_csv, header=1)
+        df_advanced['Year'] = year
+        df_regular_season_aggregated_advanced = df_regular_season_aggregated_advanced.append(df_advanced)
+    df = helper.parse_advanced(df_regular_season_aggregated_advanced)
+    df = df.dropna(0)
+    fr = IntermediateFilePersistence('transformed/SeasonRatings.csv')
+    fr.write_to_csv(df)
+    return df
+
 
 def load_tournament_game_results():
     return pd.read_csv(tourney_results_csv)
@@ -64,6 +78,6 @@ def load_test_data():
     return pd.read_csv(test_year_data)
 
 if __name__ == '__main__':
-    df = load_seed_data()
+    df = load_advanced_team_data()
     print(df.head())
     print(df.keys())

@@ -12,14 +12,15 @@ def __parse_seed(df, orig_label, dest_label):
 
 def __groom(df_dataset):
     groomed_features = ['Season', 'G_x', 'W_x',
-                    'L_x', 'W-L%_x', 'Points for_x', 'FG_x', 'FGA_x', 'FG%_x', '3P_x',
-                    '3PA_x', '3P%_x', 'FT_x', 'FTA_x', 'FT%_x', 'AST_x', 'STL_x', 'BLK_x',
-                    'Rk_x', 'Conf_x', 'Pts_x', 'SOS_x', 'OSRS_x', 'DSRS_x', 'SRS_x',
-                    'Seed_x', 'G_y', 'W_y', 'L_y', 'W-L%_y',
-                    'Points for_y', 'FG_y', 'FGA_y', 'FG%_y', '3P_y', '3PA_y', '3P%_y',
-                    'FT_y', 'FTA_y', 'FT%_y', 'AST_y', 'STL_y', 'BLK_y', 'Rk_y', 'Conf_y',
-                    'Pts_y', 'SOS_y', 'OSRS_y', 'DSRS_y', 'SRS_y', 'Seed_y',
-                    'Round']
+                'L_x', 'W-L%_x', 'Points for_x', 'FG_x', 'FGA_x', 'FG%_x', '3P_x',
+                '3PA_x', '3P%_x', 'FT_x', 'FTA_x', 'FT%_x', 'AST_x', 'STL_x', 'BLK_x',
+                'Rk_x', 'Conf_x', 'Pts_x', 'SOS_x', 'OSRS_x', 'DSRS_x', 'SRS_x',
+                'Seed_x', 'FTr_x', '3PAr_x', 'TS%_x', 'AST%_x', 'eFG%_x', 'TRB%_x', 'TOV%_x', 'G_y', 'W_y', 'L_y', 'W-L%_y',
+                'Points for_y', 'FG_y', 'FGA_y', 'FG%_y', '3P_y', '3PA_y', '3P%_y',
+                'FT_y', 'FTA_y', 'FT%_y', 'AST_y', 'STL_y', 'BLK_y', 'Rk_y', 'Conf_y',
+                'Pts_y', 'SOS_y', 'OSRS_y', 'DSRS_y', 'SRS_y', 'Seed_y', 'FTr_y', '3PAr_y', 'TS%_y', 'AST%_y', 'eFG%_y',
+                'TRB%_y', 'TOV%_y',
+                'Round']
 
     if 'ScoreDiff' in df_dataset.keys():
         groomed_features.append('ScoreDiff')

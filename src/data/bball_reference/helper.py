@@ -12,7 +12,8 @@ def parse_single_season_team_data(dataframe):
     # Drop columns that have known null values for multiple rows
     dataframe.drop(
         labels=['Conf. wins', 'Conf. losses', 'MP', 'ORB', 'Rk', 'Unnamed: 16', 'Home wins', 'Home losses', 'Away wins',
-                'Away losses', 'Points against', 'TRB', 'TOV', 'PF'], inplace=True, axis=1)
+                'Away losses', 'Points against', 'TRB', 'TOV', 'PF', 'SOS', 'SRS'], inplace=True, axis=1)
+
     dataframe = parse_team_names.groom_spellings(dataframe)
 
     return dataframe
@@ -23,3 +24,11 @@ def parse_ratings(dataframe):
     dataframe = parse_team_names.groom_spellings(dataframe)
 
     return dataframe
+
+def parse_advanced(dataframe):
+    groomed_features = ['Year', 'School', 'FTr', '3PAr', 'TS%',
+       'AST%', 'eFG%', 'TRB%', 'TOV%']
+    dataframe = parse_team_names.groom_spellings(dataframe)
+    df = dataframe[groomed_features]
+    return df
+
