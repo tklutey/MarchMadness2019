@@ -33,7 +33,7 @@ def full_workflow(historical=True):
         (train_dataset, train_labels), (test_dataset, test_labels) = split_dataset.split_training_data_randomly_with_seed(df_normalized)
 
         # Train model
-        model = train_model.make()
+        model = train_model.make("dev")
         train_model.persist(model)
 
         # Create predictions
@@ -50,7 +50,7 @@ def full_workflow(historical=True):
         normalized_test_dataset = add_dummies(normalized_test_dataset, train_dataset)
 
         # Train model
-        model = train_model.make(train_dataset, train_labels)
+        model = train_model.make("test", train_dataset, train_labels)
         train_model.persist(model)
 
         # Create predictions                  
@@ -61,5 +61,4 @@ def full_workflow(historical=True):
         build_bracket_output()
 
 if __name__ == '__main__':    
-    # full_workflow(historical=False)
-    full_workflow(True)
+    full_workflow(False)

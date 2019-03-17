@@ -68,8 +68,8 @@ def plot_training(hist):
     plt.legend()
     plt.ylim([0,200])
     
-def make(train_dataset=None, train_labels=None):
-    if train_dataset is None:
+def make(mode, train_dataset=None, train_labels=None):
+    if mode is "dev":
         fp = IntermediateFilePersistence('NormalizedFeatureData.csv')
         df = fp.read_from_csv()
         (train_dataset, train_labels), (test_dataset, test_labels) = split_dataset.split_training_data_randomly_with_seed(df)
@@ -77,8 +77,9 @@ def make(train_dataset=None, train_labels=None):
     model = build_model(train_dataset)
     model, hist = train_model(model, train_dataset, train_labels)
 
-    print("\nEvaluating dev set...\n")
-    evaluate_model(model, test_dataset, test_labels)
+    if mode is "dev":
+        print("\nEvaluating dev set...\n")
+        evaluate_model(model, test_dataset, test_labels)
     
     plot_training(hist)
     
