@@ -8,5 +8,5 @@ class BaseFilePersistence:
     def read_from_csv(self):
         return pd.read_csv(self.filepath, index_col=False)
     
-    def write_to_csv(self, df):
-        df.to_csv(self.filepath, index=False)
+    def write_to_csv(self, df, index=False):
+        df.to_csv(self.filepath, index=index)

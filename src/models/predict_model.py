@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import tensorflow as tf
 from tensorflow.keras.models import model_from_json
+import keras.backend as K
 from util import split_dataset
 from util.IntermediateFilePersistence import IntermediateFilePersistence
 
@@ -31,26 +33,15 @@ def __actual_vs_predicted(predictions, test_labels):
     return df_eval
     
 def __sign(x):
-    return 1 - (x<=0)
-    
-def __print_hit_rate(df_eval):
-    correct = 0
-    incorrect = 0
-    points_off = 0
+    return tf.sign(tf.maximum(x, 0))
 
-    for i,r in df_eval.iterrows():
-        points_off = abs(r['Predicted'] - r['Actual']) + points_off
-        if __sign(r['Predicted']) == __sign(r['Actual']):
-            correct = correct + 1
-        else:
-            incorrect = incorrect + 1
-        
-    total_games = correct+incorrect
-    hit_rate = correct / total_games
-    err_per_game = points_off / total_games
-    print('Total Games: ' + str(total_games))
-    print('Hit rate: ' + '{:.1%}'.format(hit_rate))
-    print('Points off per game: ' + str(err_per_game))
+def win_hit_rate(y_pred, y_true):
+    y_pred_signs = __sign(y_pred)
+    y_true_signs = __sign(y_true)
+    z = K.equal(y_pred_signs, y_true_signs)
+    return K.mean(z)
+
+
 
 
 def __plot_predictions(predictions, test_labels):  
@@ -62,6 +53,11 @@ def __plot_predictions(predictions, test_labels):
     plt.axis('square')
     _ = plt.plot([-50, 50], [-50, 50])
 
+def evaluate_model(model, features, labels):
+    scores = model.evaluate(features, labels, verbose=0)
+    print("%s: %.2f" % (model.metrics_names[1], scores[1]))
+    print("%s: %.2f" % (model.metrics_names[2], scores[2]))
+    print("%s: %.2f%%" % (model.metrics_names[3], scores[3] * 100))
 
 def predict(test_dataset=None):
     
@@ -79,7 +75,6 @@ def evaluate_predictions(predictions, test_labels):
     df_eval = __actual_vs_predicted(predictions, test_labels)
     print(df_eval.head())
     __plot_predictions(predictions, test_labels)
-    __print_hit_rate(df_eval)
 
 
 if __name__ == '__main__':

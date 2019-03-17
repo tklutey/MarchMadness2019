@@ -10,17 +10,27 @@ def __parse_seed(df, orig_label, dest_label):
     df_seeds.drop(labels=[orig_label], inplace=True, axis=1)
     return df_seeds
 
+def __groomed_team_features():
+    groomed_features = ['G', 'W',
+                        'L', 'W-L%', 'Points for', 'Points against', 'FG', 'FGA', 'FG%', '3P',
+                        '3PA', '3P%', 'FT', 'FTA', 'FT%', 'AST', 'STL', 'BLK',
+                        'Rk', 'Conf', 'Pts', 'SOS', 'OSRS', 'DSRS', 'SRS',
+                        'Seed', 'FTr', '3PAr', 'TS%', 'AST%', 'eFG%', 'TRB%', 'TOV%']
+
+    x_list = []
+    y_list = []
+    for feature in groomed_features:
+        x_list.append(feature + '_x')
+        y_list.append(feature + '_y')
+
+    return x_list + y_list
+
 def __groom(df_dataset):
-    groomed_features = ['Season', 'G_x', 'W_x',
-                'L_x', 'W-L%_x', 'Points for_x', 'FG_x', 'FGA_x', 'FG%_x', '3P_x',
-                '3PA_x', '3P%_x', 'FT_x', 'FTA_x', 'FT%_x', 'AST_x', 'STL_x', 'BLK_x',
-                'Rk_x', 'Conf_x', 'Pts_x', 'SOS_x', 'OSRS_x', 'DSRS_x', 'SRS_x',
-                'Seed_x', 'FTr_x', '3PAr_x', 'TS%_x', 'AST%_x', 'eFG%_x', 'TRB%_x', 'TOV%_x', 'G_y', 'W_y', 'L_y', 'W-L%_y',
-                'Points for_y', 'FG_y', 'FGA_y', 'FG%_y', '3P_y', '3PA_y', '3P%_y',
-                'FT_y', 'FTA_y', 'FT%_y', 'AST_y', 'STL_y', 'BLK_y', 'Rk_y', 'Conf_y',
-                'Pts_y', 'SOS_y', 'OSRS_y', 'DSRS_y', 'SRS_y', 'Seed_y', 'FTr_y', '3PAr_y', 'TS%_y', 'AST%_y', 'eFG%_y',
-                'TRB%_y', 'TOV%_y',
-                'Round']
+    game_features = ['Season', 'Round']
+
+    groomed_features = __groomed_team_features()
+    for feature in game_features:
+        groomed_features.append(feature)
 
     if 'ScoreDiff' in df_dataset.keys():
         groomed_features.append('ScoreDiff')

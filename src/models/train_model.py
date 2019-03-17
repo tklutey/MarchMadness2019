@@ -3,6 +3,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 import matplotlib.pyplot as plt
 import pandas as pd
+from models.predict_model import evaluate_model, win_hit_rate
 from util import split_dataset
 from util.IntermediateFilePersistence import IntermediateFilePersistence
 
@@ -25,7 +26,7 @@ def build_model(df_training_data):
 
     model.compile(loss='mse',
             optimizer=optimizer,
-            metrics=['mae', 'mse'])
+            metrics=['mae', 'mse', win_hit_rate])
     
     return model
 
@@ -37,9 +38,12 @@ def train_model(model, df_training_data, df_training_labels):
     
     hist = pd.DataFrame(history.history)
     hist['epoch'] = history.epoch
-    
-    scores = model.evaluate(df_training_data, df_training_labels, verbose=0)
-    print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
+
+    print("\nEvaluating training set...\n")
+    evaluate_model(model, df_training_data, df_training_labels)
+
+    print("\nEvaluating validation error...\n")
+    print(hist['val_mean_absolute_error'][-1:])
     
     return model, hist
 
@@ -68,10 +72,13 @@ def make(train_dataset=None, train_labels=None):
     if train_dataset is None:
         fp = IntermediateFilePersistence('NormalizedFeatureData.csv')
         df = fp.read_from_csv()
-        (train_dataset, train_labels), (_, _) = split_dataset.split_training_data_randomly_with_seed(df)
+        (train_dataset, train_labels), (test_dataset, test_labels) = split_dataset.split_training_data_randomly_with_seed(df)
 
     model = build_model(train_dataset)
     model, hist = train_model(model, train_dataset, train_labels)
+
+    print("\nEvaluating dev set...\n")
+    evaluate_model(model, test_dataset, test_labels)
     
     plot_training(hist)
     
