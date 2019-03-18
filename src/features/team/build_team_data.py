@@ -42,8 +42,12 @@ def __find_mismatched_schools(df_team_sp, df_regular_season_aggregated):
     df_duplicate = df_regular_season_data['School']
     df_duplicate = df_duplicate.drop_duplicates(keep='first')
     print("Mismatched team names = " + str(df_duplicate.size))
+    print("Mismatched teams: \n")
+    print(df_duplicate)
+
 
 def make():
+    print("Building team data...")
     df_team_sp = make_dataset.load_spellings()
     df_regular_season_aggregated = make_dataset.load_season_team_data();
     df_ratings_aggregated = make_dataset.load_ratings_team_data();

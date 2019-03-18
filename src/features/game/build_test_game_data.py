@@ -4,8 +4,13 @@ from util.IntermediateFilePersistence import IntermediateFilePersistence
 
 
 def make():
-    df_a = make_dataset.load_test_data()
-    df_b = make_dataset.load_test_data().drop('Season', axis=1)
+    fr = IntermediateFilePersistence('transformed/2019GeneratedMatchups.csv')
+
+    print("Generating test matchups...")
+    df_test = make_dataset.load_test_data()
+
+    df_a = df_test
+    df_b = df_test.drop('Season', axis=1)
 
     df = df_a.assign(key=1).merge(df_b.assign(key=1), on='key').drop('key', 1)
     df = df[df['TeamID_x'] != df['TeamID_y']]
@@ -16,7 +21,8 @@ def make():
 
     df.drop(labels=['TeamID_x', 'TeamID_y'], inplace=True, axis=1)
 
-    fr = IntermediateFilePersistence('transformed/2019GeneratedMatchups.csv')
+    print("Writing test values to disk...")
+
     fr.write_to_csv(df)
 
     return df

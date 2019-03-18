@@ -75,7 +75,11 @@ def load_spellings():
     return pd.read_csv(spellings_csv, encoding='iso8859_16')
 
 def load_test_data():
-    return pd.read_csv(test_year_data)
+    df = pd.read_csv(tourney_seeds_csv).drop('Seed', axis=1)
+    df = df.rename(columns={"TeamSeasonId": "TeamID"})
+    df = df.loc[df['Season'] == 2019]
+    df.loc
+    return df
 
 if __name__ == '__main__':
     df = load_advanced_team_data()
